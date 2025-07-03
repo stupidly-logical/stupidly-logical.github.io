@@ -33,10 +33,88 @@ a:hover {
     color: #82cfff;
 }
 
-h1, h2, .h5 {
+h1, h2, .h5, .h6 {
     font-family: 'Roboto', Arial, sans-serif;
 }
 
+h2 {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+}
+
+h2:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background: #4ea1f7;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-md-3, .col-sm-6, .col-12 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 576px) {
+    .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+/* Icons and hover effects */
+.fas, .fab {
+    width: 20px;
+    text-align: center;
+}
+
+.h5 {
+    transition: transform 0.2s ease-in-out;
+}
+
+.h5:hover {
+    transform: translateX(5px);
+}
+
+/* Make the container more responsive */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
     .container {
         padding: 1rem 0.5rem;
@@ -47,5 +125,21 @@ h1, h2, .h5 {
     .d-flex.flex-column.mr-5 {
         margin-right: 0 !important;
         margin-bottom: 1rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    .h5 {
+        font-size: 1rem;
+    }
+}
+
+/* Additional spacing for better readability on mobile */
+@media (max-width: 576px) {
+    .col-12 {
+        margin-bottom: 0.5rem;
+    }
+    .container {
+        padding: 0.75rem 0.25rem;
     }
 }
