@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+  <script>
+    (function(){
+      var s = localStorage.getItem('theme') || 'system';
+      var t = s === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        : s;
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-theme-pref', s);
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yash · Backend Engineer</title>
@@ -26,6 +36,22 @@
       --dim:          #94a3b8;
       --mono:         'JetBrains Mono', monospace;
       --sans:         'Syne', sans-serif;
+      --nav-bg:       rgba(6,6,15,0.75);
+    }
+
+    [data-theme="light"] {
+      --bg:        #f5f4ef;
+      --bg-card:   #ffffff;
+      --bg-card-h: #faf9f5;
+      --border:    rgba(0,0,0,0.09);
+      --border-h:  rgba(245,158,11,0.35);
+      --text:      #0f0f1a;
+      --muted:     #6b7280;
+      --dim:       #374151;
+      --nav-bg:    rgba(245,244,239,0.82);
+      --amber-glow: rgba(245,158,11,0.10);
+      --blue-dim:  rgba(14,120,180,0.10);
+      --blue:      #0b6fa8;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,6 +64,7 @@
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      transition: background 0.3s, color 0.3s;
     }
 
     ::-webkit-scrollbar { width: 3px; }
@@ -53,8 +80,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(6,6,15,0.75);
+      background: var(--nav-bg);
       backdrop-filter: blur(20px);
+      transition: background 0.3s;
       border-bottom: 1px solid var(--border);
     }
 
@@ -554,6 +582,36 @@
     }
     .reveal.vis { opacity:1; transform:none; }
 
+    /* ── THEME TOGGLE ────────────────────────────────────────────── */
+    .theme-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: border-color 0.3s;
+    }
+    .tt-btn {
+      background: none;
+      border: none;
+      border-right: 1px solid var(--border);
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s, border-color 0.3s;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+    }
+    .tt-btn:last-child { border-right: none; }
+    .tt-btn svg { pointer-events: none; }
+    .tt-btn:hover { color: var(--amber); }
+    .tt-btn.active {
+      background: var(--amber-glow);
+      color: var(--amber);
+    }
+
     /* ── RESPONSIVE ──────────────────────────────────────────────── */
     @media (max-width: 720px) {
       nav { padding: 1rem 1.5rem; }
@@ -581,6 +639,17 @@
     <li><a href="#journey">Journey</a></li>
     <li><a href="https://github.com/stupidly-logical" target="_blank" rel="noopener">GitHub&nbsp;↗</a></li>
   </ul>
+  <div class="theme-toggle" id="theme-toggle" role="group" aria-label="Color theme">
+    <button class="tt-btn" data-t="dark"   title="Dark mode">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="tt-btn" data-t="system" title="System default">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </button>
+    <button class="tt-btn" data-t="light"  title="Light mode">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
 </nav>
 
 <!-- ── HERO ──────────────────────────────────────────────────────── -->
@@ -949,6 +1018,40 @@
   stagger('.skill-group', '--sd', 0.09);
   stagger('.proj-card',   '--pd', 0.07);
   stagger('.tl-item',     '--td', 0.1);
+})();
+
+// ── THEME ──────────────────────────────────────────────────────────
+(function () {
+  const html    = document.documentElement;
+  const toggle  = document.getElementById('theme-toggle');
+  const mq      = window.matchMedia('(prefers-color-scheme: light)');
+
+  function applyTheme(pref) {
+    const resolved = pref === 'system' ? (mq.matches ? 'light' : 'dark') : pref;
+    html.setAttribute('data-theme', resolved);
+    html.setAttribute('data-theme-pref', pref);
+    toggle.querySelectorAll('.tt-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.t === pref);
+    });
+  }
+
+  // init from stored pref
+  const stored = localStorage.getItem('theme') || 'system';
+  applyTheme(stored);
+
+  // button clicks
+  toggle.querySelectorAll('.tt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pref = btn.dataset.t;
+      localStorage.setItem('theme', pref);
+      applyTheme(pref);
+    });
+  });
+
+  // react to OS change when in system mode
+  mq.addEventListener('change', () => {
+    if ((localStorage.getItem('theme') || 'system') === 'system') applyTheme('system');
+  });
 })();
 </script>
 </body>
