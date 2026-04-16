@@ -32,23 +32,29 @@
       --text: #e8eef8;
       --muted: #9aa9c6;
       --dim: #6680a3;
+      --hero-text: var(--text);
+      --hero-muted: var(--muted);
       --mono: 'JetBrains Mono', monospace;
       --sans: 'Syne', sans-serif;
       --nav-bg: rgba(6, 6, 15, 0.66);
+      --page-gradient: linear-gradient(180deg, var(--bg) 0%, #06060f 55%, #020205 100%);
     }
 
     [data-theme="light"] {
-      --bg: #f5f4ef;
-      --bg-card: rgba(255, 255, 255, 0.95);
-      --bg-card-soft: rgba(15, 15, 28, 0.04);
-      --bg-card-strong: #ffffff;
-      --border: rgba(15, 23, 42, 0.09);
-      --border-strong: rgba(245, 158, 11, 0.20);
+      --bg: #f4efe7;
+      --page-gradient: linear-gradient(180deg, var(--bg) 0%, #ede7dc 55%, #e9e2d9 100%);
+      --bg-card: #f8f4ec;
+      --bg-card-soft: #efe7dc;
+      --bg-card-strong: #ece4d8;
+      --border: rgba(15, 23, 42, 0.24);
+      --border-strong: rgba(245, 158, 11, 0.22);
       --text: #0f172a;
-      --muted: #475569;
-      --dim: #64748b;
-      --nav-bg: rgba(249, 247, 237, 0.88);
-      --amber-soft: rgba(245, 158, 11, 0.12);
+      --muted: #4d5563;
+      --hero-text: #111827;
+      --hero-muted: #4b5563;
+      --dim: #6b7280;
+      --nav-bg: rgba(249, 247, 237, 0.96);
+      --amber-soft: rgba(245, 158, 11, 0.14);
     }
 
     *, *::before, *::after {
@@ -64,7 +70,7 @@
     body {
       min-height: 100vh;
       background: radial-gradient(circle at top, rgba(245, 158, 11, 0.08), transparent 26%),
-                  linear-gradient(180deg, var(--bg) 0%, #06060f 55%, #020205 100%);
+                  var(--page-gradient);
       color: var(--text);
       font-family: var(--sans);
       letter-spacing: -0.01em;
@@ -151,8 +157,8 @@
       justify-content: center;
       padding: 0.75rem 1rem;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
       color: var(--text);
       font-size: 0.78rem;
       text-decoration: none;
@@ -169,7 +175,7 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--bg-card-soft);
     }
     .tt-btn {
       background: none;
@@ -240,20 +246,20 @@
       width: min(100%, 640px);
       max-width: 620px;
       margin: 0 auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      background: var(--bg-card-strong);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.14);
       backdrop-filter: blur(14px);
       z-index: 3;
       padding: 2rem 2.2rem;
     }
     .hero-name {
-      color: #ffffff !important;
+      color: var(--hero-text);
       font-size: 6rem !important;
     }
     .hero-lead,
     .hero-tagline {
-      color: #ffffff !important;
+      color: var(--hero-muted);
     }
     .hero-eyebrow {
       display: inline-flex;
@@ -319,16 +325,17 @@
       align-items: center;
       padding: 0.55rem 0.95rem;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
+      border: 1px solid var(--border);
+      background: var(--bg-card-soft);
+      color: var(--text);
       font-size: 0.78rem;
       letter-spacing: 0.04em;
       transition: background 0.2s ease, border-color 0.2s ease;
     }
     .chip.hire {
-      border-color: rgba(52, 211, 153, 0.25);
-      color: #c7f0dd;
+      border-color: rgba(52, 211, 153, 0.45);
+      color: var(--text);
+      background: rgba(52, 211, 153, 0.14);
     }
 
     .hero-profile {
@@ -338,8 +345,8 @@
       gap: 1.3rem;
       padding: 1.5rem;
       border-radius: 2rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       box-shadow: 0 18px 60px rgba(0, 0, 0, 0.16);
       backdrop-filter: blur(12px);
     }
@@ -350,8 +357,8 @@
     .profile-summary {
       padding: 0.95rem 1.15rem;
       border-radius: 999px;
-      background: rgba(245, 158, 11, 0.12);
-      color: #ffefcc;
+      background: rgba(245, 158, 11, 0.16);
+      color: var(--text);
       font-size: 0.8rem;
       letter-spacing: 0.09em;
       text-transform: uppercase;
@@ -419,7 +426,7 @@
       padding: 1.5rem;
       border-radius: 1.5rem;
       border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--bg-card);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .skill-group:hover {
@@ -441,7 +448,7 @@
     .tag {
       padding: 0.5rem 0.75rem;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--bg-card-soft);
       color: var(--text);
       font-size: 0.8rem;
     }
@@ -457,14 +464,14 @@
       color: inherit;
       padding: 1.5rem 1.75rem;
       border-radius: 1.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
       transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
     }
     .proj-card:hover {
       transform: translateY(-4px);
       border-color: rgba(245, 158, 11, 0.22);
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--bg-card-strong);
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
     }
     .proj-meta {
@@ -474,7 +481,7 @@
       font-size: 0.7rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--text);
       margin-bottom: 0.9rem;
     }
     .proj-name {
@@ -530,7 +537,10 @@
     .tl-item {
       position: relative;
       margin-bottom: 2rem;
-      padding-left: 1.5rem;
+      padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+      background: var(--bg-card);
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
     }
     .tl-item:last-child {
       margin-bottom: 0;
@@ -558,6 +568,8 @@
       font-size: 1.05rem;
       font-weight: 700;
       margin-bottom: 0.45rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
     }
     .tl-detail {
       max-width: 620px;
@@ -574,8 +586,8 @@
       align-items: start;
       padding: 2rem;
       border-radius: 1.75rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       box-shadow: 0 28px 80px rgba(0, 0, 0, 0.16);
     }
     .contact-copy p {
@@ -595,8 +607,8 @@
       min-height: 4.2rem;
       padding: 0 1.2rem;
       border-radius: 1.25rem;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      background: var(--bg-card-soft);
       color: var(--text);
       font-size: 0.9rem;
       font-weight: 600;
