@@ -1,23 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
-  <script>
-    (function(){
-      var s = localStorage.getItem('theme') || 'system';
-      var t = s === 'system'
-        ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
-        : s;
-      document.documentElement.setAttribute('data-theme', t);
-      document.documentElement.setAttribute('data-theme-pref', s);
-    })();
-  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yash · Backend Engineer</title>
   <meta name="description" content="Backend engineer focused on reliable distributed systems, event-driven architecture, and production-ready backend platforms.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #06060f;
@@ -213,15 +203,6 @@
       pointer-events: none;
       background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 28%),
                   radial-gradient(circle at center left, rgba(56, 189, 248, 0.08), transparent 20%);
-    }
-
-    #net-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      z-index: 1;
     }
 
     .hero-inner {
@@ -781,6 +762,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="css/sticker-pop.css">
 </head>
 <body>
 
@@ -816,8 +798,6 @@
 
 <!-- ── HERO ──────────────────────────────────────────────────────── -->
 <section id="hero">
-  <canvas id="net-canvas"></canvas>
-
   <div class="hero-inner">
     <div class="hero-copy">
       <div class="hero-eyebrow">Backend Engineer · India</div>
@@ -1031,125 +1011,6 @@
 </footer>
 
 <script>
-// ── CANVAS — distributed network with data packets ─────────────────
-(function () {
-  const canvas = document.getElementById('net-canvas');
-  const ctx    = canvas.getContext('2d');
-  const A      = 'rgba(245,158,11,'; // amber prefix
-  const N      = 55;   // node count
-  const D      = 155;  // connection distance
-  let nodes = [], packets = [], raf, frame = 0;
-
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  class Node {
-    constructor(first) {
-      this.x  = Math.random() * canvas.width;
-      this.y  = first ? Math.random() * canvas.height : Math.random() * canvas.height;
-      this.vx = (Math.random() - 0.5) * 0.35;
-      this.vy = (Math.random() - 0.5) * 0.35;
-      this.r  = Math.random() * 1.4 + 0.5;
-      this.ph = Math.random() * Math.PI * 2;
-      this.hot= Math.random() > 0.72;
-    }
-    tick() {
-      this.x  += this.vx;
-      this.y  += this.vy;
-      this.ph += 0.016;
-      if (this.x < -30) this.x = canvas.width  + 30;
-      if (this.x > canvas.width  + 30) this.x = -30;
-      if (this.y < -30) this.y = canvas.height + 30;
-      if (this.y > canvas.height + 30) this.y = -30;
-    }
-    draw() {
-      const a = this.hot ? 0.65 + Math.sin(this.ph) * 0.35 : 0.2;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, 6.283);
-      ctx.fillStyle = A + a + ')';
-      ctx.fill();
-      if (this.hot) {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r * 5, 0, 6.283);
-        ctx.fillStyle = A + (0.05 + 0.04 * Math.sin(this.ph)) + ')';
-        ctx.fill();
-      }
-    }
-  }
-
-  class Packet {
-    constructor(a, b) {
-      this.a = a; this.b = b;
-      this.t = 0;
-      this.sp= 0.007 + Math.random() * 0.009;
-    }
-    tick() { this.t += this.sp; return this.t >= 1; }
-    draw() {
-      const x = this.a.x + (this.b.x - this.a.x) * this.t;
-      const y = this.a.y + (this.b.y - this.a.y) * this.t;
-      ctx.beginPath(); ctx.arc(x, y, 2.5, 0, 6.283);
-      ctx.fillStyle = A + '0.95)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.283);
-      ctx.fillStyle = A + '0.18)'; ctx.fill();
-    }
-  }
-
-  function spawnPacket() {
-    const a = nodes[Math.floor(Math.random() * nodes.length)];
-    const nb = nodes.filter(n => {
-      if (n === a) return false;
-      const dx = n.x-a.x, dy = n.y-a.y;
-      return Math.sqrt(dx*dx+dy*dy) < D;
-    });
-    if (nb.length) packets.push(new Packet(a, nb[Math.floor(Math.random()*nb.length)]));
-  }
-
-  function draw() {
-    raf = requestAnimationFrame(draw);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // edges
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i+1; j < nodes.length; j++) {
-        const dx = nodes[i].x-nodes[j].x, dy = nodes[i].y-nodes[j].y;
-        const d  = Math.sqrt(dx*dx+dy*dy);
-        if (d < D) {
-          ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = A + ((1-d/D)*0.18) + ')';
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-
-    nodes.forEach(n => { n.tick(); n.draw(); });
-
-    frame++;
-    if (frame % 45 === 0) spawnPacket();
-    packets = packets.filter(p => { p.draw(); return !p.tick(); });
-  }
-
-  resize();
-  nodes = Array.from({length: N}, (_, i) => new Node(true));
-  draw();
-
-  // pause when hero scrolled away
-  const heroEl = document.getElementById('hero');
-  new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) { if (!raf) draw(); }
-    else { cancelAnimationFrame(raf); raf = null; }
-  }).observe(heroEl);
-
-  window.addEventListener('resize', () => {
-    resize();
-    nodes.forEach(n => { n.x = Math.random()*canvas.width; n.y = Math.random()*canvas.height; });
-  });
-})();
-
 // ── TYPEWRITER ─────────────────────────────────────────────────────
 (function () {
   const phrases = [
@@ -1203,39 +1064,6 @@
   stagger('.tl-item',     '--td', 0.1);
 })();
 
-// ── THEME ──────────────────────────────────────────────────────────
-(function () {
-  const html    = document.documentElement;
-  const toggle  = document.getElementById('theme-toggle');
-  const mq      = window.matchMedia('(prefers-color-scheme: light)');
-
-  function applyTheme(pref) {
-    const resolved = pref === 'system' ? (mq.matches ? 'light' : 'dark') : pref;
-    html.setAttribute('data-theme', resolved);
-    html.setAttribute('data-theme-pref', pref);
-    toggle.querySelectorAll('.tt-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.t === pref);
-    });
-  }
-
-  // init from stored pref
-  const stored = localStorage.getItem('theme') || 'system';
-  applyTheme(stored);
-
-  // button clicks
-  toggle.querySelectorAll('.tt-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const pref = btn.dataset.t;
-      localStorage.setItem('theme', pref);
-      applyTheme(pref);
-    });
-  });
-
-  // react to OS change when in system mode
-  mq.addEventListener('change', () => {
-    if ((localStorage.getItem('theme') || 'system') === 'system') applyTheme('system');
-  });
-})();
 </script>
 </body>
 </html>
