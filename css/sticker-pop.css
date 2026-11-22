@@ -215,6 +215,28 @@ nav {
   font-weight: 600;
 }
 
+.hero-desc {
+  max-width: 520px;
+  margin-top: 1.25rem;
+  color: var(--sp-color-ink-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+.hero-desc a {
+  color: var(--sp-color-ink);
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: var(--sp-color-pink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.hero-desc a:hover {
+  text-decoration-color: var(--sp-color-ink);
+}
+
 .cursor {
   background: var(--sp-color-pink);
 }
